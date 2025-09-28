@@ -22,6 +22,22 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        rating: {
+          1: "hsl(var(--rating-1))",
+          2: "hsl(var(--rating-2))",
+          3: "hsl(var(--rating-3))",
+          4: "hsl(var(--rating-4))",
+          5: "hsl(var(--rating-5))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
