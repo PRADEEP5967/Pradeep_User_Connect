@@ -208,7 +208,6 @@ export const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({ data }) =>
                   fill="#8884d8"
                   dataKey="value"
                 >
-                >
                   {data.ratingDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
