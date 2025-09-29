@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { DashboardStats } from '@/components/modern/DashboardStats';
+import { DataTable } from '@/components/ui/data-table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -291,60 +293,20 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <DashboardLayout title="Admin Dashboard" subtitle="Manage users, stores, and view platform statistics">
+      {/* Enhanced Dashboard Stats */}
+      <DashboardStats 
+        userRole="admin" 
+        stats={{
+          totalUsers: stats.totalUsers,
+          totalStores: stats.totalStores,
+          totalRatings: stats.totalRatings,
+          userGrowth: 12,
+          storeGrowth: 8,
+          ratingGrowth: 15
+        }} 
+      />
+
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="stat-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              +{stats.adminUsers} admin users
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="stat-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Stores</CardTitle>
-            <StoreIcon className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalStores}</div>
-            <p className="text-xs text-muted-foreground">
-              Registered stores
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="stat-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Ratings</CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalRatings}</div>
-            <p className="text-xs text-muted-foreground">
-              Submitted ratings
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="stat-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-success">+12%</div>
-            <p className="text-xs text-muted-foreground">
-              New users this month
-            </p>
-          </CardContent>
-        </Card>
-      </div>
 
       <Tabs defaultValue="users" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">

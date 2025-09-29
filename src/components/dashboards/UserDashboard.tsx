@@ -1,5 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { DashboardStats } from '@/components/modern/DashboardStats';
+import { SearchFilters } from '@/components/modern/SearchFilters';
+import { StoreComparison } from '@/components/modern/StoreComparison';
+import { StoreMap } from '@/components/modern/StoreMap';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +46,10 @@ export const UserDashboard: React.FC = () => {
   const [sortField, setSortField] = useState<'name' | 'averageRating' | 'totalRatings'>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [ratingFilter, setRatingFilter] = useState<'all' | 'rated' | 'unrated'>('all');
+  const [compareStores, setCompareStores] = useState<Store[]>([]);
+  const [showMap, setShowMap] = useState(false);
+  const [selectedMapStore, setSelectedMapStore] = useState<Store | null>(null);
+  const [filters, setFilters] = useState<any>({});
 
   // Get user's ratings
   const userRatings = useMemo(() => {
@@ -88,6 +96,30 @@ export const UserDashboard: React.FC = () => {
 
     return filtered;
   }, [stores, searchTerm, sortField, sortDirection, ratingFilter, userRatings]);
+
+  // Apply advanced filters
+  const finalFilteredStores = useMemo(() => {
+    let filtered = filteredStores;
+    
+    if (filters.search) {
+      filtered = filtered.filter(store => 
+        store.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+        store.address.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+    
+    if (filters.rating && filters.rating[0] > 0) {
+      filtered = filtered.filter(store => store.averageRating >= filters.rating[0]);
+    }
+    
+    if (filters.location) {
+      filtered = filtered.filter(store => 
+        store.address.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  }, [filteredStores, filters]);
 
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,11 +195,41 @@ export const UserDashboard: React.FC = () => {
     return sortDirection === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />;
   };
 
+  const handleAddToCompare = (store: Store) => {
+    if (compareStores.length >= 4) {
+      toast({
+        title: 'Comparison Limit',
+        description: 'You can compare up to 4 stores at once',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    if (!compareStores.find(s => s.id === store.id)) {
+      setCompareStores(prev => [...prev, store]);
+      toast({
+        title: 'Store Added',
+        description: `${store.name} added to comparison`,
+      });
+    }
+  };
+
+  const handleRemoveFromCompare = (storeId: string) => {
+    setCompareStores(prev => prev.filter(s => s.id !== storeId));
+  };
+
+  const userStats = {
+    myRatings: Object.keys(userRatings).length,
+  };
+
   if (!user) return null;
 
   return (
     <DashboardLayout title="User Dashboard" subtitle="Browse stores and submit your ratings">
       <div className="space-y-8">
+        {/* Dashboard Stats */}
+        <DashboardStats userRole="user" stats={userStats} />
+
         {/* Password Update Section */}
         <Card>
           <CardHeader>
@@ -212,26 +274,47 @@ export const UserDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Advanced Search & Filters */}
+        <SearchFilters onFiltersChange={setFilters} />
+
+        {/* Store Comparison */}
+        {compareStores.length > 0 && (
+          <StoreComparison
+            stores={compareStores}
+            onRemoveStore={handleRemoveFromCompare}
+            onClearAll={() => setCompareStores([])}
+          />
+        )}
+
+        {/* Map Toggle */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Store Directory</h2>
+          <Button
+            variant={showMap ? 'default' : 'outline'}
+            onClick={() => setShowMap(!showMap)}
+          >
+            {showMap ? 'List View' : 'Map View'}
+          </Button>
+        </div>
+
+        {/* Map View */}
+        {showMap && (
+          <StoreMap
+            stores={finalFilteredStores}
+            selectedStore={selectedMapStore}
+            onStoreSelect={setSelectedMapStore}
+          />
+        )}
+
         {/* Store Listings */}
-        <Card>
+        {!showMap && (
+          <Card>
           <CardHeader>
-            <CardTitle>Store Directory</CardTitle>
             <CardDescription>Browse and rate stores on our platform</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4 mb-6">
               <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search stores by name or address..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-9"
-                    />
-                  </div>
-                </div>
                 <Select value={ratingFilter} onValueChange={(value: typeof ratingFilter) => setRatingFilter(value)}>
                   <SelectTrigger className="w-full sm:w-48">
                     <Filter className="h-4 w-4 mr-2" />
@@ -276,9 +359,10 @@ export const UserDashboard: React.FC = () => {
             </div>
 
             <div className="space-y-6">
-              {filteredStores.map((store) => {
+              {finalFilteredStores.map((store) => {
                 const userRating = userRatings[store.id];
                 const currentRating = selectedRatings[store.id] || userRating?.rating || 0;
+                const isInComparison = compareStores.find(s => s.id === store.id);
                 
                 return (
                   <Card key={store.id} className="dashboard-card">
@@ -287,14 +371,30 @@ export const UserDashboard: React.FC = () => {
                         <div className="flex justify-between items-start">
                           <div className="space-y-2">
                             <h3 className="text-xl font-semibold">{store.name}</h3>
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">
+                                {store.totalRatings} ratings
+                              </Badge>
+                              {!isInComparison && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleAddToCompare(store)}
+                                >
+                                  Compare
+                                </Button>
+                              )}
+                              {isInComparison && (
+                                <Badge variant="default" className="text-xs">
+                                  In Comparison
+                                </Badge>
+                              )}
+                            </div>
                             <div className="flex items-center gap-2 text-muted-foreground">
                               <MapPin className="w-4 h-4" />
                               <span>{store.address}</span>
                             </div>
                           </div>
-                          <Badge variant="outline" className="text-xs">
-                            {store.totalRatings} ratings
-                          </Badge>
                         </div>
 
                         <div className="space-y-3">
@@ -350,7 +450,7 @@ export const UserDashboard: React.FC = () => {
                 );
               })}
 
-              {filteredStores.length === 0 && (
+              {finalFilteredStores.length === 0 && (
                 <Card className="dashboard-card">
                   <CardContent className="p-8 text-center">
                     <div className="text-muted-foreground">
@@ -364,6 +464,7 @@ export const UserDashboard: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+        )}
       </div>
     </DashboardLayout>
   );
