@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { NotificationSystem } from '@/components/notifications/NotificationSystem';
 import { useAuth } from '@/contexts/AuthContext';
 import { LogOut, User } from 'lucide-react';
 
@@ -28,6 +29,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
             
             <div className="flex items-center space-x-4">
+              <NotificationSystem />
               <div className="flex items-center space-x-2 text-sm">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span className="text-foreground font-medium">{user?.name}</span>

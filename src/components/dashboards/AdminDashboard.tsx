@@ -19,6 +19,8 @@ import {
 import { User, Store, ValidationErrors } from '@/types';
 import { validateUserForm } from '@/utils/validation';
 import { toast } from '@/hooks/use-toast';
+import { AdvancedAnalytics } from '@/components/analytics/AdvancedAnalytics';
+import { BulkOperations } from '@/components/bulk/BulkOperations';
 import { 
   Users, 
   Store as StoreIcon, 
@@ -246,6 +248,47 @@ export const AdminDashboard: React.FC = () => {
     return direction === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />;
   };
 
+  // Generate analytics data
+  const analyticsData = useMemo(() => {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const monthlyData = monthNames.map(month => ({
+      name: month,
+      users: Math.floor(Math.random() * 50) + 20,
+      stores: Math.floor(Math.random() * 15) + 5,
+      ratings: Math.floor(Math.random() * 100) + 30
+    }));
+
+    const ratingDistribution = [
+      { name: '5 Stars', value: ratings.filter(r => r.rating === 5).length, color: '#10B981' },
+      { name: '4 Stars', value: ratings.filter(r => r.rating === 4).length, color: '#3B82F6' },
+      { name: '3 Stars', value: ratings.filter(r => r.rating === 3).length, color: '#F59E0B' },
+      { name: '2 Stars', value: ratings.filter(r => r.rating === 2).length, color: '#EF4444' },
+      { name: '1 Star', value: ratings.filter(r => r.rating === 1).length, color: '#6B7280' }
+    ];
+
+    const topStores = stores
+      .sort((a, b) => b.averageRating - a.averageRating)
+      .slice(0, 10)
+      .map(store => ({
+        name: store.name,
+        rating: store.averageRating,
+        reviews: store.totalRatings
+      }));
+
+    return {
+      totalUsers: stats.totalUsers,
+      totalStores: stats.totalStores,
+      totalRatings: stats.totalRatings,
+      averageRating: stores.length > 0 ? stores.reduce((acc, s) => acc + s.averageRating, 0) / stores.length : 0,
+      userGrowth: 12,
+      storeGrowth: 8,
+      ratingGrowth: 15,
+      monthlyData,
+      ratingDistribution,
+      topStores
+    };
+  }, [users, stores, ratings, stats]);
+
   return (
     <DashboardLayout title="Admin Dashboard" subtitle="Manage users, stores, and view platform statistics">
       {/* Statistics Cards */}
@@ -304,11 +347,12 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       <Tabs defaultValue="users" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="stores">Stores</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="add-user">Add User</TabsTrigger>
-          <TabsTrigger value="add-store">Add Store</TabsTrigger>
+          <TabsTrigger value="bulk-ops">Bulk Ops</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="space-y-6">
@@ -547,6 +591,14 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <AdvancedAnalytics data={analyticsData} />
+        </TabsContent>
+
+        <TabsContent value="bulk-ops" className="space-y-6">
+          <BulkOperations onDataUpdate={() => window.location.reload()} />
         </TabsContent>
 
         <TabsContent value="add-user" className="space-y-6">
