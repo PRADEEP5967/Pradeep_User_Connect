@@ -17,15 +17,7 @@ import {
 import { Store, Rating, User } from '@/types';
 import { toast } from '@/hooks/use-toast';
 import { validatePassword } from '@/utils/validation';
-import { 
-  Star,
-  Users,
-  BarChart3,
-  TrendingUp,
-  Eye,
-  EyeOff,
-  Key
-} from 'lucide-react';
+import { Star, Users, ChartBar as BarChart3, TrendingUp, Eye, EyeOff, Key } from 'lucide-react';
 
 export const StoreOwnerDashboard: React.FC = () => {
   const { user, updatePassword } = useAuth();

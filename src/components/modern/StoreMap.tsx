@@ -4,19 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StarRating } from '@/components/ui/star-rating';
 import { Store } from '@/types';
-import { 
-  Map, 
-  MapPin, 
-  Navigation, 
-  Layers, 
-  Search,
-  Filter,
-  Star,
-  Phone,
-  Clock,
-  Car,
-  Walking
-} from 'lucide-react';
+import { Map, MapPin, Navigation, Layers, Search, Filter, Star, Phone, Clock, Car, Scaling as Walking } from 'lucide-react';
 
 interface StoreMapProps {
   stores: Store[];

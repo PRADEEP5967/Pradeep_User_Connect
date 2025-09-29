@@ -5,18 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { StarRating } from '@/components/ui/star-rating';
 import { Separator } from '@/components/ui/separator';
 import { Store } from '@/types';
-import { 
-  Compare, 
-  X, 
-  MapPin, 
-  Star, 
-  Users, 
-  Calendar,
-  Award,
-  TrendingUp,
-  CheckCircle,
-  XCircle
-} from 'lucide-react';
+import { GitCompare as Compare, X, MapPin, Star, Users, Calendar, Award, TrendingUp, CircleCheck as CheckCircle, Circle as XCircle } from 'lucide-react';
 
 interface StoreComparisonProps {
   stores: Store[];

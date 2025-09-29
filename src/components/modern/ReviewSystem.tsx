@@ -8,18 +8,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { StarRating } from '@/components/ui/star-rating';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  MessageSquare, 
-  ThumbsUp, 
-  ThumbsDown, 
-  Flag, 
-  Calendar,
-  User,
-  Filter,
-  TrendingUp,
-  Award,
-  CheckCircle
-} from 'lucide-react';
+import { MessageSquare, ThumbsUp, ThumbsDown, Flag, Calendar, User, Filter, TrendingUp, Award, CircleCheck as CheckCircle } from 'lucide-react';
 
 interface Review {
   id: string;

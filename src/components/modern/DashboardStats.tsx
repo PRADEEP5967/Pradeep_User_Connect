@@ -2,19 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Users, 
-  Store, 
-  Star, 
-  Activity,
-  Calendar,
-  Target,
-  Award,
-  Clock,
-  BarChart3
-} from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, Store, Star, Activity, Calendar, Target, Award, Clock, ChartBar as BarChart3 } from 'lucide-react';
 
 interface StatCard {
   title: string;

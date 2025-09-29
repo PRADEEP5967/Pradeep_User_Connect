@@ -23,20 +23,7 @@ import { validateUserForm } from '@/utils/validation';
 import { toast } from '@/hooks/use-toast';
 import { AdvancedAnalytics } from '@/components/analytics/AdvancedAnalytics';
 import { BulkOperations } from '@/components/bulk/BulkOperations';
-import { 
-  Users, 
-  Store as StoreIcon, 
-  Star, 
-  Plus, 
-  Search,
-  Filter,
-  BarChart3,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  Download,
-  TrendingUp
-} from 'lucide-react';
+import { Users, Store as StoreIcon, Star, Plus, Search, Filter, ChartBar as BarChart3, ArrowUpDown, ArrowUp, ArrowDown, Download, TrendingUp } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const [users] = useState<User[]>(getUsers());
