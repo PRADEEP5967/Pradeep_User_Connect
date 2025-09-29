@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StarRating } from '@/components/ui/star-rating';
+import { StoreRatingChart } from '@/components/analytics/StoreRatingChart';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   getStores, 
@@ -56,9 +57,14 @@ export const StoreOwnerDashboard: React.FC = () => {
     }).filter(item => item.user);
   }, [storeRatings, users]);
 
-  // Calculate statistics
+  // Calculate statistics and rating distribution
   const stats = useMemo(() => {
-    if (!ownerStore) return { averageRating: 0, totalRatings: 0, recentRatings: 0 };
+    if (!ownerStore) return { 
+      averageRating: 0, 
+      totalRatings: 0, 
+      recentRatings: 0,
+      ratingDistribution: []
+    };
     
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -66,10 +72,22 @@ export const StoreOwnerDashboard: React.FC = () => {
       new Date(rating.createdAt) > thirtyDaysAgo
     ).length;
 
+    // Calculate rating distribution
+    const ratingCounts = [1, 2, 3, 4, 5].map(rating => ({
+      rating,
+      count: storeRatings.filter(r => r.rating === rating).length
+    }));
+
+    const ratingDistribution = ratingCounts.map(item => ({
+      ...item,
+      percentage: ownerStore.totalRatings > 0 ? (item.count / ownerStore.totalRatings) * 100 : 0
+    }));
+
     return {
       averageRating: ownerStore.averageRating,
       totalRatings: ownerStore.totalRatings,
-      recentRatings
+      recentRatings,
+      ratingDistribution
     };
   }, [ownerStore, storeRatings]);
 
@@ -237,11 +255,20 @@ export const StoreOwnerDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Rating Distribution Chart */}
+        {stats.totalRatings > 0 && (
+          <StoreRatingChart
+            ratings={stats.ratingDistribution}
+            totalRatings={stats.totalRatings}
+            averageRating={stats.averageRating}
+          />
+        )}
+
         {/* Customer Ratings */}
         <Card>
           <CardHeader>
             <CardTitle>Customer Ratings</CardTitle>
-            <CardDescription>View ratings submitted by customers</CardDescription>
+            <CardDescription>Recent ratings submitted by customers</CardDescription>
           </CardHeader>
           <CardContent>
             {ratingUsers.length > 0 ? (

@@ -26,7 +26,12 @@ import {
   Plus, 
   Search,
   Filter,
-  BarChart3
+  BarChart3,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Download,
+  TrendingUp
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -36,6 +41,10 @@ export const AdminDashboard: React.FC = () => {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [userSortField, setUserSortField] = useState<'name' | 'email' | 'role' | 'createdAt'>('name');
+  const [userSortDirection, setUserSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [storeSortField, setStoreSortField] = useState<'name' | 'email' | 'averageRating' | 'totalRatings'>('name');
+  const [storeSortDirection, setStoreSortDirection] = useState<'asc' | 'desc'>('asc');
   
   const [newUserForm, setNewUserForm] = useState({
     name: '',
@@ -61,25 +70,63 @@ export const AdminDashboard: React.FC = () => {
     adminUsers: users.filter(u => u.role === 'admin').length
   }), [users, stores, ratings]);
 
-  // Filtered users
+  // Filtered and sorted users
   const filteredUsers = useMemo(() => {
-    return users.filter(user => {
+    let filtered = users.filter(user => {
       const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            user.address.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesRole = roleFilter === 'all' || user.role === roleFilter;
       return matchesSearch && matchesRole;
     });
-  }, [users, searchTerm, roleFilter]);
 
-  // Filtered stores
+    // Sort users
+    filtered.sort((a, b) => {
+      let aVal: string | number = a[userSortField];
+      let bVal: string | number = b[userSortField];
+      
+      if (typeof aVal === 'string') {
+        aVal = aVal.toLowerCase();
+        bVal = (bVal as string).toLowerCase();
+      }
+      
+      if (userSortDirection === 'asc') {
+        return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      } else {
+        return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+      }
+    });
+
+    return filtered;
+  }, [users, searchTerm, roleFilter, userSortField, userSortDirection]);
+
+  // Filtered and sorted stores
   const filteredStores = useMemo(() => {
-    return stores.filter(store => 
+    let filtered = stores.filter(store => 
       store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       store.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       store.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [stores, searchTerm]);
+
+    // Sort stores
+    filtered.sort((a, b) => {
+      let aVal: string | number = a[storeSortField];
+      let bVal: string | number = b[storeSortField];
+      
+      if (typeof aVal === 'string') {
+        aVal = aVal.toLowerCase();
+        bVal = (bVal as string).toLowerCase();
+      }
+      
+      if (storeSortDirection === 'asc') {
+        return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      } else {
+        return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+      }
+    });
+
+    return filtered;
+  }, [stores, searchTerm, storeSortField, storeSortDirection]);
 
   // Store owners for dropdown
   const storeOwners = users.filter(u => u.role === 'store_owner');
@@ -153,12 +200,50 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleUserSort = (field: typeof userSortField) => {
+    if (userSortField === field) {
+      setUserSortDirection(userSortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setUserSortField(field);
+      setUserSortDirection('asc');
+    }
+  };
+
+  const handleStoreSort = (field: typeof storeSortField) => {
+    if (storeSortField === field) {
+      setStoreSortDirection(storeSortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setStoreSortField(field);
+      setStoreSortDirection('asc');
+    }
+  };
+
+  const exportToCSV = (data: any[], filename: string) => {
+    const csv = [
+      Object.keys(data[0]).join(','),
+      ...data.map(row => Object.values(row).map(val => `"${val}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
       case 'admin': return 'destructive';
       case 'store_owner': return 'default';
       default: return 'secondary';
     }
+  };
+
+  const getSortIcon = (field: string, currentField: string, direction: 'asc' | 'desc') => {
+    if (field !== currentField) return <ArrowUpDown className="w-4 h-4" />;
+    return direction === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />;
   };
 
   return (
@@ -206,13 +291,13 @@ export const AdminDashboard: React.FC = () => {
 
         <Card className="stat-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Platform Health</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success">Active</div>
+            <div className="text-2xl font-bold text-success">+12%</div>
             <p className="text-xs text-muted-foreground">
-              All systems operational
+              New users this month
             </p>
           </CardContent>
         </Card>
@@ -257,6 +342,57 @@ export const AdminDashboard: React.FC = () => {
                     <SelectItem value="admin">Administrators</SelectItem>
                   </SelectContent>
                 </Select>
+                <Button
+                  variant="outline"
+                  onClick={() => exportToCSV(filteredUsers.map(u => ({
+                    name: u.name,
+                    email: u.email,
+                    role: u.role,
+                    address: u.address,
+                    joinDate: new Date(u.createdAt).toLocaleDateString()
+                  })), 'users-export.csv')}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Export
+                </Button>
+              </div>
+
+              {/* Sorting Controls */}
+              <div className="flex flex-wrap gap-2 mb-4 p-3 bg-muted/50 rounded-lg">
+                <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
+                <Button
+                  variant={userSortField === 'name' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleUserSort('name')}
+                  className="h-8 px-3"
+                >
+                  Name {getSortIcon('name', userSortField, userSortDirection)}
+                </Button>
+                <Button
+                  variant={userSortField === 'email' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleUserSort('email')}
+                  className="h-8 px-3"
+                >
+                  Email {getSortIcon('email', userSortField, userSortDirection)}
+                </Button>
+                <Button
+                  variant={userSortField === 'role' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleUserSort('role')}
+                  className="h-8 px-3"
+                >
+                  Role {getSortIcon('role', userSortField, userSortDirection)}
+                </Button>
+                <Button
+                  variant={userSortField === 'createdAt' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleUserSort('createdAt')}
+                  className="h-8 px-3"
+                >
+                  Join Date {getSortIcon('createdAt', userSortField, userSortDirection)}
+                </Button>
               </div>
 
               <div className="space-y-4">
@@ -307,16 +443,70 @@ export const AdminDashboard: React.FC = () => {
               <CardDescription>View and manage all registered stores</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mb-6">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search stores by name, email, or address..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9"
-                  />
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search stores by name, email, or address..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
                 </div>
+                <Button
+                  variant="outline"
+                  onClick={() => exportToCSV(filteredStores.map(s => ({
+                    name: s.name,
+                    email: s.email,
+                    address: s.address,
+                    rating: s.averageRating,
+                    totalRatings: s.totalRatings,
+                    dateAdded: new Date(s.createdAt).toLocaleDateString()
+                  })), 'stores-export.csv')}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Export
+                </Button>
+              </div>
+
+              {/* Store Sorting Controls */}
+              <div className="flex flex-wrap gap-2 mb-4 p-3 bg-muted/50 rounded-lg">
+                <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
+                <Button
+                  variant={storeSortField === 'name' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleStoreSort('name')}
+                  className="h-8 px-3"
+                >
+                  Name {getSortIcon('name', storeSortField, storeSortDirection)}
+                </Button>
+                <Button
+                  variant={storeSortField === 'email' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleStoreSort('email')}
+                  className="h-8 px-3"
+                >
+                  Email {getSortIcon('email', storeSortField, storeSortDirection)}
+                </Button>
+                <Button
+                  variant={storeSortField === 'averageRating' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleStoreSort('averageRating')}
+                  className="h-8 px-3"  
+                >
+                  Rating {getSortIcon('averageRating', storeSortField, storeSortDirection)}
+                </Button>
+                <Button
+                  variant={storeSortField === 'totalRatings' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleStoreSort('totalRatings')}
+                  className="h-8 px-3"
+                >
+                  Reviews {getSortIcon('totalRatings', storeSortField, storeSortDirection)}
+                </Button>
               </div>
 
               <div className="space-y-4">

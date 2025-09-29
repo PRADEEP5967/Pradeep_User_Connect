@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { StarRating } from '@/components/ui/star-rating';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
@@ -22,7 +23,11 @@ import {
   Star,
   Eye,
   EyeOff,
-  Key
+  Key,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Filter
 } from 'lucide-react';
 
 export const UserDashboard: React.FC = () => {  
@@ -34,14 +39,9 @@ export const UserDashboard: React.FC = () => {
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRatings, setSelectedRatings] = useState<{ [storeId: string]: number }>({});
-
-  // Filter stores based on search
-  const filteredStores = useMemo(() => {
-    return stores.filter(store => 
-      store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      store.address.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [stores, searchTerm]);
+  const [sortField, setSortField] = useState<'name' | 'averageRating' | 'totalRatings'>('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [ratingFilter, setRatingFilter] = useState<'all' | 'rated' | 'unrated'>('all');
 
   // Get user's ratings
   const userRatings = useMemo(() => {
@@ -54,6 +54,40 @@ export const UserDashboard: React.FC = () => {
     });
     return userRatingMap;
   }, [ratings, user]);
+
+  // Filter and sort stores
+  const filteredStores = useMemo(() => {
+    let filtered = stores.filter(store => 
+      store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      store.address.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Apply rating filter
+    if (ratingFilter === 'rated') {
+      filtered = filtered.filter(store => userRatings[store.id]);
+    } else if (ratingFilter === 'unrated') {
+      filtered = filtered.filter(store => !userRatings[store.id]);
+    }
+
+    // Sort stores
+    filtered.sort((a, b) => {
+      let aVal: string | number = a[sortField];
+      let bVal: string | number = b[sortField];
+      
+      if (typeof aVal === 'string') {
+        aVal = aVal.toLowerCase();
+        bVal = (bVal as string).toLowerCase();
+      }
+      
+      if (sortDirection === 'asc') {
+        return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      } else {
+        return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+      }
+    });
+
+    return filtered;
+  }, [stores, searchTerm, sortField, sortDirection, ratingFilter, userRatings]);
 
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,6 +149,20 @@ export const UserDashboard: React.FC = () => {
     setSelectedRatings(prev => ({ ...prev, [storeId]: rating }));
   };
 
+  const handleSort = (field: typeof sortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortIcon = (field: string) => {
+    if (field !== sortField) return <ArrowUpDown className="w-4 h-4" />;
+    return sortDirection === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />;
+  };
+
   if (!user) return null;
 
   return (
@@ -171,15 +219,59 @@ export const UserDashboard: React.FC = () => {
             <CardDescription>Browse and rate stores on our platform</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search stores by name or address..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
-                />
+            <div className="space-y-4 mb-6">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search stores by name or address..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
+                </div>
+                <Select value={ratingFilter} onValueChange={(value: typeof ratingFilter) => setRatingFilter(value)}>
+                  <SelectTrigger className="w-full sm:w-48">
+                    <Filter className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Filter by rating status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Stores</SelectItem>
+                    <SelectItem value="rated">Stores I've Rated</SelectItem>
+                    <SelectItem value="unrated">Stores I Haven't Rated</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Sorting Controls */}
+              <div className="flex flex-wrap gap-2 p-3 bg-muted/50 rounded-lg">
+                <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
+                <Button
+                  variant={sortField === 'name' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleSort('name')}
+                  className="h-8 px-3"
+                >
+                  Name {getSortIcon('name')}
+                </Button>
+                <Button
+                  variant={sortField === 'averageRating' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleSort('averageRating')}
+                  className="h-8 px-3"
+                >
+                  Rating {getSortIcon('averageRating')}
+                </Button>
+                <Button
+                  variant={sortField === 'totalRatings' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleSort('totalRatings')}
+                  className="h-8 px-3"
+                >
+                  Reviews {getSortIcon('totalRatings')}
+                </Button>
               </div>
             </div>
 
