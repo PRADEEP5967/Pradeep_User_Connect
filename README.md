@@ -1,8 +1,58 @@
-# Welcome to your Lovable project
+# Store Rating Platform 🌟
 
-## Project info
+A comprehensive web application for rating and managing stores with role-based access control, advanced analytics, and modern features.
 
-**URL**: https://lovable.dev/projects/6491d561-95c5-4aa6-b10e-b44a811b87ed
+**Project URL**: https://lovable.dev/projects/6491d561-95c5-4aa6-b10e-b44a811b87ed
+
+## 🎯 Overview
+
+This platform allows users to submit ratings for stores (1-5 stars) with a sophisticated role-based access system:
+- **System Administrator** - Manage users, stores, and view analytics
+- **Normal User** - Browse and rate stores
+- **Store Owner** - Monitor store performance and customer feedback
+
+## 🔐 Quick Start - Default Login
+
+**Admin Account:**
+- Email: `admin@system.com`
+- Password: `Admin123!`
+
+*New users can register through the signup page. Admins can create additional accounts.*
+
+## ✨ Core Features
+
+### System Administrator Dashboard
+- ✅ Add users (admin, normal user, store owner)
+- ✅ Add and manage stores
+- ✅ View platform statistics (users, stores, ratings)
+- ✅ Advanced analytics with charts
+- ✅ Bulk CSV import for users and stores
+- ✅ Export data to CSV
+- ✅ Sort and filter all listings
+- ✅ Real-time notifications
+
+### Normal User Dashboard
+- ✅ Browse all stores with search and filters
+- ✅ Submit ratings (1-5 stars)
+- ✅ Update previous ratings
+- ✅ Compare multiple stores
+- ✅ Interactive map view
+- ✅ Advanced search filters
+- ✅ Password management
+
+### Store Owner Dashboard
+- ✅ View store rating analytics
+- ✅ Monitor customer reviews
+- ✅ Rating distribution charts
+- ✅ Performance insights
+- ✅ Password management
+
+## 📋 Form Validations
+
+- **Name:** 20-60 characters
+- **Email:** Valid email format
+- **Password:** 8-16 chars, uppercase + special character
+- **Address:** Max 400 characters
 
 ## How can I edit this code?
 
@@ -50,24 +100,82 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+## 🛠️ Technology Stack
 
-This project is built with:
+- **Frontend:** React 18 with TypeScript
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS with custom design system
+- **UI Library:** shadcn/ui components
+- **Charts:** Recharts for analytics
+- **Icons:** Lucide React
+- **Theme:** next-themes (dark/light mode)
+- **Storage:** localStorage (no backend needed)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🎨 Modern Features
+
+- **Advanced Analytics** - Growth charts, distribution graphs
+- **Store Comparison** - Compare up to 4 stores side-by-side
+- **Interactive Map** - Visual store locations with directions
+- **Review System** - Comprehensive rating and review management
+- **Bulk Operations** - CSV import/export functionality
+- **Notifications** - Real-time system notifications
+- **Theme Toggle** - Dark/light mode support
+- **Responsive Design** - Mobile, tablet, and desktop optimized
 
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/6491d561-95c5-4aa6-b10e-b44a811b87ed) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+## 📁 Project Structure
 
-Yes, you can!
+```
+src/
+├── components/
+│   ├── analytics/       # Charts and visualizations
+│   ├── auth/           # Login/Register forms
+│   ├── bulk/           # CSV import operations
+│   ├── dashboards/     # Role-based dashboards
+│   ├── layout/         # Layout components
+│   ├── modern/         # Advanced features
+│   ├── notifications/  # Notification system
+│   ├── theme/          # Theme toggle
+│   └── ui/            # Reusable components
+├── contexts/          # React Context (Auth)
+├── hooks/            # Custom hooks
+├── types/            # TypeScript interfaces
+├── utils/            # Utility functions
+└── index.css         # Design system
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 💾 Data Storage
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+All data is stored in browser localStorage:
+- `users` - User accounts
+- `stores` - Store information
+- `ratings` - User ratings
+- `currentUser` - Active session
+
+## 🚀 Development Commands
+
+```sh
+npm run dev      # Start dev server
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run lint     # Lint code
+```
+
+## 🌐 Can I connect a custom domain?
+
+Yes! Navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more: [Custom Domain Setup](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## 📚 Resources
+
+- [Lovable Documentation](https://docs.lovable.dev/)
+- [Troubleshooting Guide](https://docs.lovable.dev/tips-tricks/troubleshooting)
+- [Community Discord](https://discord.com/channels/1119885301872070706/1280461670979993613)
+
+---
+
+**Built with ❤️ using Lovable**
