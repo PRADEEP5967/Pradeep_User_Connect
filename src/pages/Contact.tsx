@@ -82,7 +82,7 @@ const Contact = () => {
               <CardDescription>Send us an email anytime</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">support@storerating.com</p>
+              <p className="text-sm text-muted-foreground">pradeepsahani8130s@gmail.com</p>
             </CardContent>
           </Card>
 
@@ -95,7 +95,7 @@ const Contact = () => {
               <CardDescription>Mon-Fri from 8am to 5pm</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+              <p className="text-sm text-muted-foreground">+91 8130885013</p>
             </CardContent>
           </Card>
 
@@ -111,7 +111,7 @@ const Contact = () => {
               <p className="text-sm text-muted-foreground">
                 123 Business Street<br />
                 Suite 100<br />
-                City, State 12345
+                New Delhi, India
               </p>
             </CardContent>
           </Card>

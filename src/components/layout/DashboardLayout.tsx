@@ -88,8 +88,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <div>
               <h3 className="font-semibold text-foreground mb-4">Connect</h3>
               <p className="text-sm text-muted-foreground">
-                Email: support@storerating.com<br />
-                Phone: +1 (555) 123-4567
+                Email: pradeepsahani8130s@gmail.com<br />
+                Phone: +91 8130885013
               </p>
             </div>
           </div>
