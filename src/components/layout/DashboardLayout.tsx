@@ -60,6 +60,44 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         
         {children}
       </main>
+
+      <footer className="border-t bg-card mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">About</h3>
+              <p className="text-sm text-muted-foreground">
+                Store Rating Platform - Empowering customers and store owners through transparent, reliable ratings.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="/about" className="text-muted-foreground hover:text-primary transition-colors">About Us</a></li>
+                <li><a href="/help" className="text-muted-foreground hover:text-primary transition-colors">Help Center</a></li>
+                <li><a href="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a></li>
+                <li><a href="/terms" className="text-muted-foreground hover:text-primary transition-colors">Terms of Service</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground mb-4">Connect</h3>
+              <p className="text-sm text-muted-foreground">
+                Email: support@storerating.com<br />
+                Phone: +1 (555) 123-4567
+              </p>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} Store Rating Platform. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
