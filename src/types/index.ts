@@ -2,10 +2,10 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  password: string;
   address: string;
   role: 'admin' | 'user' | 'store_owner';
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
 }
 
 export interface Store {
@@ -31,8 +31,8 @@ export interface Rating {
 export interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
-  register: (userData: Omit<User, 'id' | 'created_at' | 'updated_at' | 'role'> & { password: string }) => Promise<boolean>;
+  logout: () => void;
+  register: (userData: Omit<User, 'id' | 'createdAt' | 'role'>) => Promise<boolean>;
   updatePassword: (newPassword: string) => Promise<boolean>;
 }
 
