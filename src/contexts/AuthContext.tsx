@@ -62,8 +62,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
+      // Normalize email to lowercase for consistency
+      const normalizedEmail = email.trim().toLowerCase();
+      
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: normalizedEmail,
         password,
       });
 
@@ -141,8 +144,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return false;
       }
 
+      // Normalize email to lowercase and trim all fields
+      const normalizedData = {
+        ...userData,
+        email: userData.email.trim().toLowerCase(),
+        name: userData.name.trim(),
+        address: userData.address.trim()
+      };
+
       const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: userData.email,
+        email: normalizedData.email,
         password: userData.password,
       });
 
@@ -168,9 +179,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('users')
         .insert({
           id: authData.user.id,
-          email: userData.email,
-          name: userData.name,
-          address: userData.address,
+          email: normalizedData.email,
+          name: normalizedData.name,
+          address: normalizedData.address,
           role: 'user',
         })
         .select()

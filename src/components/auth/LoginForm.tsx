@@ -23,7 +23,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // Sanitize input - remove leading whitespace
+    const sanitizedValue = value.trimStart();
+    setFormData(prev => ({ ...prev, [name]: sanitizedValue }));
     
     // Clear errors when user starts typing
     if (errors[name as keyof typeof errors]) {
@@ -77,6 +79,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                 value={formData.email}
                 onChange={handleInputChange}
                 className={errors.email ? 'border-destructive' : ''}
+                maxLength={255}
+                autoComplete="email"
+                required
               />
               {errors.email && (
                 <p className="text-sm text-destructive">{errors.email}</p>
@@ -94,6 +99,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={errors.password ? 'border-destructive pr-10' : 'pr-10'}
+                  maxLength={16}
+                  autoComplete="current-password"
+                  required
                 />
                 <Button
                   type="button"

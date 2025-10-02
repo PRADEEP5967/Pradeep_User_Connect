@@ -27,7 +27,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) =
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // Sanitize input - remove leading/trailing whitespace for non-address fields
+    const sanitizedValue = name === 'address' ? value : value.trimStart();
+    setFormData(prev => ({ ...prev, [name]: sanitizedValue }));
     
     // Clear errors when user starts typing
     if (errors[name as keyof ValidationErrors]) {
@@ -69,10 +71,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) =
                 id="name"
                 name="name"
                 type="text"
-                placeholder="Enter your full name (20-60 characters)"
+                placeholder="Enter your full name (min 3 characters)"
                 value={formData.name}
                 onChange={handleInputChange}
                 className={errors.name ? 'border-destructive' : ''}
+                maxLength={100}
+                autoComplete="name"
+                required
               />
               {errors.name && (
                 <p className="text-sm text-destructive">{errors.name}</p>
@@ -89,6 +94,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) =
                 value={formData.email}
                 onChange={handleInputChange}
                 className={errors.email ? 'border-destructive' : ''}
+                maxLength={255}
+                autoComplete="email"
+                required
               />
               {errors.email && (
                 <p className="text-sm text-destructive">{errors.email}</p>
@@ -100,11 +108,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) =
               <Textarea
                 id="address"
                 name="address"
-                placeholder="Enter your full address (max 400 characters)"
+                placeholder="Enter your full address (min 10, max 500 characters)"
                 value={formData.address}
                 onChange={handleInputChange}
                 className={errors.address ? 'border-destructive' : ''}
                 rows={3}
+                maxLength={500}
+                autoComplete="street-address"
+                required
               />
               {errors.address && (
                 <p className="text-sm text-destructive">{errors.address}</p>
@@ -122,6 +133,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) =
                   value={formData.password}
                   onChange={handleInputChange}
                   className={errors.password ? 'border-destructive pr-10' : 'pr-10'}
+                  maxLength={16}
+                  autoComplete="new-password"
+                  required
                 />
                 <Button
                   type="button"

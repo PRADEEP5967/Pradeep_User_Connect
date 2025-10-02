@@ -1,16 +1,20 @@
 import { ValidationErrors } from '@/types';
 
 export const validateName = (name: string): string | null => {
-  if (!name.trim()) return 'Name is required';
-  if (name.length < 20) return 'Name must be at least 20 characters';
-  if (name.length > 60) return 'Name must not exceed 60 characters';
+  const trimmedName = name.trim();
+  if (!trimmedName) return 'Name is required';
+  if (trimmedName.length < 3) return 'Name must be at least 3 characters';
+  if (trimmedName.length > 100) return 'Name must not exceed 100 characters';
+  if (!/^[a-zA-Z\s'-]+$/.test(trimmedName)) return 'Name can only contain letters, spaces, hyphens, and apostrophes';
   return null;
 };
 
 export const validateEmail = (email: string): string | null => {
-  if (!email.trim()) return 'Email is required';
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) return 'Please enter a valid email address';
+  const trimmedEmail = email.trim().toLowerCase();
+  if (!trimmedEmail) return 'Email is required';
+  if (trimmedEmail.length > 255) return 'Email must not exceed 255 characters';
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(trimmedEmail)) return 'Please enter a valid email address';
   return null;
 };
 
@@ -24,8 +28,10 @@ export const validatePassword = (password: string): string | null => {
 };
 
 export const validateAddress = (address: string): string | null => {
-  if (!address.trim()) return 'Address is required';
-  if (address.length > 400) return 'Address must not exceed 400 characters';
+  const trimmedAddress = address.trim();
+  if (!trimmedAddress) return 'Address is required';
+  if (trimmedAddress.length < 10) return 'Address must be at least 10 characters';
+  if (trimmedAddress.length > 500) return 'Address must not exceed 500 characters';
   return null;
 };
 
