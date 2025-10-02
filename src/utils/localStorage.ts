@@ -15,10 +15,10 @@ const initializeDefaultData = () => {
       id: '1',
       name: 'System Administrator Account',
       email: 'admin@system.com',
-      password: 'Admin123!',
       address: '123 Admin Street, Admin City, AC 12345',
       role: 'admin',
-      createdAt: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
     saveUsers([defaultAdmin]);
   }
@@ -34,12 +34,14 @@ export const saveUsers = (users: User[]): void => {
   localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 };
 
-export const addUser = (user: Omit<User, 'id' | 'createdAt'>): User => {
+export const addUser = (user: Omit<User, 'id' | 'created_at' | 'updated_at'>): User => {
   const users = getUsers();
+  const now = new Date().toISOString();
   const newUser: User = {
     ...user,
     id: Date.now().toString(),
-    createdAt: new Date().toISOString()
+    created_at: now,
+    updated_at: now
   };
   users.push(newUser);
   saveUsers(users);

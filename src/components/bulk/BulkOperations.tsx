@@ -55,7 +55,6 @@ export const BulkOperations: React.FC<BulkOperationsProps> = ({ onDataUpdate }) 
           addUser({
             name,
             email,
-            password,
             address,
             role: (role as 'user' | 'store_owner' | 'admin') || 'user'
           });
@@ -262,7 +261,7 @@ Fashion Hub, fashion@hub.com, 200 Style St, mike.johnson@email.com`;
               variant="outline"
               onClick={() => {
                 const csvData = users.map(u => 
-                  `${u.name},${u.email},${u.role},${u.address},${new Date(u.createdAt).toLocaleDateString()}`
+                  `${u.name},${u.email},${u.role},${u.address},${new Date(u.created_at).toLocaleDateString()}`
                 ).join('\n');
                 const blob = new Blob([`Name,Email,Role,Address,Join Date\n${csvData}`], { type: 'text/csv' });
                 const url = URL.createObjectURL(blob);

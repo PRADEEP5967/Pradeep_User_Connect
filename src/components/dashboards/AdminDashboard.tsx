@@ -132,7 +132,12 @@ export const AdminDashboard: React.FC = () => {
     }
 
     try {
-      addUser(newUserForm);
+      addUser({
+        name: newUserForm.name,
+        email: newUserForm.email,
+        address: newUserForm.address,
+        role: newUserForm.role
+      });
       setNewUserForm({
         name: '',
         email: '',
@@ -342,7 +347,7 @@ export const AdminDashboard: React.FC = () => {
                     email: u.email,
                     role: u.role,
                     address: u.address,
-                    joinDate: new Date(u.createdAt).toLocaleDateString()
+                    joinDate: new Date(u.created_at).toLocaleDateString()
                   })), 'users-export.csv')}
                   className="flex items-center gap-2"
                 >
@@ -416,7 +421,7 @@ export const AdminDashboard: React.FC = () => {
                           </div>
                           <div className="text-right">
                             <p className="text-xs text-muted-foreground">
-                              Joined {new Date(user.createdAt).toLocaleDateString()}
+                              Joined {new Date(user.created_at).toLocaleDateString()}
                             </p>
                           </div>
                         </div>

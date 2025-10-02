@@ -36,7 +36,7 @@ export const NotificationSystem: React.FC = () => {
         // Recent user registrations
         const recentUsers = users
           .filter(u => u.role !== 'admin')
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
           .slice(0, 5);
 
         recentUsers.forEach(u => {
@@ -45,7 +45,7 @@ export const NotificationSystem: React.FC = () => {
             type: 'user_joined',
             title: 'New User Registration',
             message: `${u.name} joined the platform`,
-            timestamp: u.createdAt,
+            timestamp: u.created_at,
             read: false,
             data: u
           });
