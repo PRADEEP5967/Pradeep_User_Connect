@@ -32,10 +32,10 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
 }) => {
   const [filters, setFilters] = useState<FilterOptions>({
     search: '',
-    location: '',
-    category: '',
+    location: 'all',
+    category: 'all',
     rating: [0],
-    priceRange: '',
+    priceRange: 'all',
     sortBy: 'rating',
     dateRange: 'all'
   });
@@ -50,20 +50,20 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
     // Update active filters for display
     const active = [];
     if (newFilters.search) active.push(`Search: ${newFilters.search}`);
-    if (newFilters.location) active.push(`Location: ${newFilters.location}`);
-    if (newFilters.category) active.push(`Category: ${newFilters.category}`);
+    if (newFilters.location && newFilters.location !== 'all') active.push(`Location: ${newFilters.location}`);
+    if (newFilters.category && newFilters.category !== 'all') active.push(`Category: ${newFilters.category}`);
     if (newFilters.rating[0] > 0) active.push(`Rating: ${newFilters.rating[0]}+ stars`);
-    if (newFilters.priceRange) active.push(`Price: ${newFilters.priceRange}`);
+    if (newFilters.priceRange && newFilters.priceRange !== 'all') active.push(`Price: ${newFilters.priceRange}`);
     setActiveFilters(active);
   };
 
   const clearFilters = () => {
     const clearedFilters = {
       search: '',
-      location: '',
-      category: '',
+      location: 'all',
+      category: 'all',
       rating: [0],
-      priceRange: '',
+      priceRange: 'all',
       sortBy: 'rating',
       dateRange: 'all'
     };
@@ -75,11 +75,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   const removeFilter = (filterText: string) => {
     const newFilters = { ...filters };
     if (filterText.startsWith('Search:')) newFilters.search = '';
-    if (filterText.startsWith('Location:')) newFilters.location = '';
-    if (filterText.startsWith('Category:')) newFilters.category = '';
+    if (filterText.startsWith('Location:')) newFilters.location = 'all';
+    if (filterText.startsWith('Category:')) newFilters.category = 'all';
     if (filterText.startsWith('Rating:')) newFilters.rating = [0];
-    if (filterText.startsWith('Price:')) newFilters.priceRange = '';
-    
+    if (filterText.startsWith('Price:')) newFilters.priceRange = 'all';
+
     setFilters(newFilters);
     onFiltersChange(newFilters);
     setActiveFilters(activeFilters.filter(f => f !== filterText));
@@ -122,7 +122,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
                 <SelectValue placeholder="Any location" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Any location</SelectItem>
+                <SelectItem value="all">Any location</SelectItem>
                 {locations.map((location) => (
                   <SelectItem key={location} value={location}>
                     {location}
@@ -140,7 +140,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
                 <SelectValue placeholder="Any category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Any category</SelectItem>
+                <SelectItem value="all">Any category</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
@@ -196,7 +196,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               <SelectValue placeholder="Any price range" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any price range</SelectItem>
+              <SelectItem value="all">Any price range</SelectItem>
               <SelectItem value="budget">$ - Budget Friendly</SelectItem>
               <SelectItem value="moderate">$$ - Moderate</SelectItem>
               <SelectItem value="expensive">$$$ - Expensive</SelectItem>
