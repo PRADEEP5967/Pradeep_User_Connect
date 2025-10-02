@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { StarRating } from '@/components/ui/star-rating';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/LocalAuthContext';
 import { 
   getStores, 
   getRatings,

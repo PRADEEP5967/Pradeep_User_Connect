@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StarRating } from '@/components/ui/star-rating';
 import { StoreRatingChart } from '@/components/analytics/StoreRatingChart';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/LocalAuthContext';
 import { 
   getStores, 
   getRatings,

@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/LocalAuthContext';
 import { validateEmail } from '@/utils/validation';
 import { Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 

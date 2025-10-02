@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { NotificationSystem } from '@/components/notifications/NotificationSystem';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/LocalAuthContext';
 import { LogOut, User } from 'lucide-react';
 
 interface DashboardLayoutProps {
