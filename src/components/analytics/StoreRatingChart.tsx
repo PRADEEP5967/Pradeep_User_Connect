@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Star, TrendingUp, BarChart3, Users } from 'lucide-react';
+import { Star, TrendingUp, ChartBar as BarChart3, Users } from 'lucide-react';
 import { AnimatedCounter } from '@/components/ui/animated-counter';
 
 interface RatingData {
