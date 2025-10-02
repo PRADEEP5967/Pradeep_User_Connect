@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bell, Check, X, Star, User, Store } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/LocalAuthContext';
 import { getRatings, getUsers, getStores } from '@/utils/localStorage';
 
 interface Notification {
