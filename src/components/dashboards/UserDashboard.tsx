@@ -23,29 +23,7 @@ import {
 import { Store, Rating } from '@/types';
 import { toast } from '@/hooks/use-toast';
 import { validatePassword } from '@/utils/validation';
-import {
-  Search,
-  MapPin,
-  Star,
-  Eye,
-  EyeOff,
-  Key,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
-  Filter,
-  Heart,
-  TrendingUp,
-  Clock,
-  Zap,
-  BookmarkPlus,
-  Award,
-  Activity,
-  Grid3X3,
-  List,
-  Mail,
-  Phone
-} from 'lucide-react';
+import { Search, MapPin, Star, Eye, EyeOff, Key, ArrowUpDown, ArrowUp, ArrowDown, Filter, Heart, TrendingUp, Clock, Zap, BookmarkPlus, Award, Activity, Grid3x3 as Grid3X3, List, Mail, Phone } from 'lucide-react';
 
 export const UserDashboard: React.FC = () => {
   const { user, updatePassword } = useAuth();
