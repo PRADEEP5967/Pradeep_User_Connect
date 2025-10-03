@@ -2,7 +2,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { NotificationSystem } from '@/components/notifications/NotificationSystem';
 import { useAuth } from '@/contexts/LocalAuthContext';
-import { LogOut, User } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { LogOut, User, Settings, UserCircle, Trophy, FileText } from 'lucide-react';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -10,12 +11,14 @@ interface DashboardLayoutProps {
   subtitle?: string;
 }
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ 
-  children, 
-  title, 
-  subtitle 
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+  children,
+  title,
+  subtitle
 }) => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
@@ -28,22 +31,64 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               </h1>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <Button
+                variant={location.pathname === '/profile' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => navigate('/profile')}
+                className="flex items-center gap-2"
+              >
+                <UserCircle className="w-4 h-4" />
+                <span className="hidden md:inline">Profile</span>
+              </Button>
+
+              <Button
+                variant={location.pathname === '/leaderboard' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => navigate('/leaderboard')}
+                className="flex items-center gap-2"
+              >
+                <Trophy className="w-4 h-4" />
+                <span className="hidden md:inline">Leaderboard</span>
+              </Button>
+
+              {user?.role === 'admin' && (
+                <Button
+                  variant={location.pathname === '/reports' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => navigate('/reports')}
+                  className="flex items-center gap-2"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span className="hidden md:inline">Reports</span>
+                </Button>
+              )}
+
+              <Button
+                variant={location.pathname === '/settings' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => navigate('/settings')}
+                className="flex items-center gap-2"
+              >
+                <Settings className="w-4 h-4" />
+                <span className="hidden md:inline">Settings</span>
+              </Button>
+
               <NotificationSystem />
-              <div className="flex items-center space-x-2 text-sm">
+
+              <div className="flex items-center space-x-2 text-sm border-l pl-2">
                 <User className="w-4 h-4 text-muted-foreground" />
-                <span className="text-foreground font-medium">{user?.name}</span>
-                <span className="text-muted-foreground">({user?.role})</span>
+                <span className="text-foreground font-medium hidden lg:inline">{user?.name}</span>
               </div>
-              
-              <Button 
-                variant="outline" 
-                size="sm" 
+
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={logout}
                 className="flex items-center space-x-2"
               >
                 <LogOut className="w-4 h-4" />
-                <span>Logout</span>
+                <span className="hidden md:inline">Logout</span>
               </Button>
             </div>
           </div>

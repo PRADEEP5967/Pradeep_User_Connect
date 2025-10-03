@@ -13,6 +13,10 @@ import Help from "./pages/Help";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Contact from "./pages/Contact";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
+import Leaderboard from "./pages/Leaderboard";
+import Reports from "./pages/Reports";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +50,10 @@ const App = () => (
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/reports" element={<Reports />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
