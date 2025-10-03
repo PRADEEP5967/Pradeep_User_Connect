@@ -127,6 +127,7 @@ export const addRating = (rating: Omit<Rating, 'id' | 'createdAt' | 'updatedAt'>
     ratings[existingRatingIndex] = {
       ...ratings[existingRatingIndex],
       rating: rating.rating,
+      comment: rating.comment,
       updatedAt: new Date().toISOString()
     };
   } else {

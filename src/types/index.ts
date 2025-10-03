@@ -13,7 +13,11 @@ export interface Store {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   address: string;
+  category?: string;
+  description?: string;
+  priceRange?: string;
   ownerId: string;
   createdAt: string;
   averageRating: number;
@@ -25,6 +29,7 @@ export interface Rating {
   userId: string;
   storeId: string;
   rating: number;
+  comment?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -4,9 +4,11 @@ import { DashboardStats } from '@/components/modern/DashboardStats';
 import { SearchFilters } from '@/components/modern/SearchFilters';
 import { StoreComparison } from '@/components/modern/StoreComparison';
 import { StoreMap } from '@/components/modern/StoreMap';
+import { StoreDetailDialog } from '@/components/modern/StoreDetailDialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -23,7 +25,7 @@ import {
 import { Store, Rating } from '@/types';
 import { toast } from '@/hooks/use-toast';
 import { validatePassword } from '@/utils/validation';
-import { Search, MapPin, Star, Eye, EyeOff, Key, ArrowUpDown, ArrowUp, ArrowDown, Filter, Heart, TrendingUp, Clock, Zap, BookmarkPlus, Award, Activity, Grid3x3 as Grid3X3, List, Mail, Phone } from 'lucide-react';
+import { Search, MapPin, Star, Eye, EyeOff, Key, ArrowUpDown, ArrowUp, ArrowDown, Filter, Heart, TrendingUp, Clock, Zap, BookmarkPlus, Award, Activity, Grid3x3 as Grid3X3, List, Mail, Phone, MessageSquare, Info } from 'lucide-react';
 
 export const UserDashboard: React.FC = () => {
   const { user, updatePassword } = useAuth();
@@ -44,6 +46,9 @@ export const UserDashboard: React.FC = () => {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [activeTab, setActiveTab] = useState('all-stores');
+  const [ratingComments, setRatingComments] = useState<{ [storeId: string]: string }>({});
+  const [detailStore, setDetailStore] = useState<Store | null>(null);
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
 
   const userRatings = useMemo(() => {
     if (!user) return {};
@@ -165,7 +170,8 @@ export const UserDashboard: React.FC = () => {
       addRating({
         userId: user.id,
         storeId,
-        rating
+        rating,
+        comment: ratingComments[storeId] || undefined
       });
 
       toast({
@@ -174,6 +180,7 @@ export const UserDashboard: React.FC = () => {
       });
 
       setSelectedRatings(prev => ({ ...prev, [storeId]: 0 }));
+      setRatingComments(prev => ({ ...prev, [storeId]: '' }));
       setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
       toast({
@@ -330,6 +337,24 @@ export const UserDashboard: React.FC = () => {
                     />
                   </div>
 
+                  <div className="space-y-2">
+                    <Label htmlFor={`comment-${store.id}`} className="text-sm font-medium flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4" />
+                      Add a Review (Optional)
+                    </Label>
+                    <Textarea
+                      id={`comment-${store.id}`}
+                      placeholder="Share your experience with this store..."
+                      value={ratingComments[store.id] || ''}
+                      onChange={(e) => setRatingComments(prev => ({ ...prev, [store.id]: e.target.value }))}
+                      className="min-h-[80px]"
+                      maxLength={500}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {ratingComments[store.id]?.length || 0}/500 characters
+                    </p>
+                  </div>
+
                   <div className="flex gap-2">
                     <Button
                       onClick={() => handleRatingSubmit(store.id)}
@@ -341,18 +366,29 @@ export const UserDashboard: React.FC = () => {
                       {userRating ? 'Update Rating' : 'Submit Rating'}
                     </Button>
 
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setDetailStore(store);
+                        setShowDetailDialog(true);
+                      }}
+                    >
+                      <Info className="w-4 h-4 mr-2" />
+                      Details
+                    </Button>
+
                     {!isInComparison ? (
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleAddToCompare(store)}
                       >
-                        <TrendingUp className="w-4 h-4 mr-2" />
-                        Compare
+                        <TrendingUp className="w-4 h-4" />
                       </Button>
                     ) : (
                       <Button variant="secondary" size="sm" disabled>
-                        <Badge className="text-xs">In Comparison</Badge>
+                        <Badge className="text-xs">In Compare</Badge>
                       </Button>
                     )}
                   </div>
@@ -653,6 +689,13 @@ export const UserDashboard: React.FC = () => {
             </Tabs>
           </CardContent>
         </Card>
+
+        <StoreDetailDialog
+          store={detailStore}
+          open={showDetailDialog}
+          onOpenChange={setShowDetailDialog}
+          ratings={ratings}
+        />
       </div>
     </DashboardLayout>
   );
