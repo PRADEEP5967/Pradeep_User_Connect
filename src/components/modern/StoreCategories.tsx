@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { StarRating } from '@/components/ui/star-rating';
 import { getStores } from '@/utils/localStorage';
-import { Store, ShoppingBag, Coffee, Utensils, Home, Heart, Zap, Grid3x3 as Grid3X3 } from 'lucide-react';
+import { Store, ShoppingBag, Coffee, Utensils, Chrome as Home, Heart, Zap, Grid3x3 as Grid3X3 } from 'lucide-react';
 
 interface StoreCategoriesProps {
   onCategorySelect?: (category: string) => void;

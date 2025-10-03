@@ -13,7 +13,7 @@ import { AnimatedCounter } from '@/components/ui/animated-counter';
 import { useAuth } from '@/contexts/LocalAuthContext';
 import { getRatings, getStores } from '@/utils/localStorage';
 import { toast } from '@/hooks/use-toast';
-import { User, Star, MapPin, Mail, Calendar, Award, TrendingUp, Edit, Save, X } from 'lucide-react';
+import { User, Star, MapPin, Mail, Calendar, Award, TrendingUp, CreditCard as Edit, Save, X } from 'lucide-react';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { NotificationSystem } from '@/components/notifications/NotificationSystem';
 import { useAuth } from '@/contexts/LocalAuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, User, Settings, UserCircle, Trophy, FileText } from 'lucide-react';
+import { LogOut, User, Settings, CircleUser as UserCircle, Trophy, FileText } from 'lucide-react';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
