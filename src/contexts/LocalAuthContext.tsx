@@ -7,8 +7,10 @@ import {
   addUser, 
   getUserByEmail, 
   getCurrentUser, 
-  setCurrentUser 
+  setCurrentUser,
+  updateUser,
 } from '@/utils/localStorage';
+import { sha256Hex } from '@/utils/crypto';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -35,12 +37,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // Normalize email
       const normalizedEmail = email.trim().toLowerCase();
-      
-      // Find user by email
       const foundUser = getUserByEmail(normalizedEmail);
-      
+
       if (!foundUser) {
         toast({
           title: 'Login Failed',
@@ -50,13 +49,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return false;
       }
 
-      // Note: In a real app, passwords would be hashed
-      // For this demo, we're doing a simple check
-      // You would need to store hashed passwords and compare them properly
-      
+      // Hash provided password and compare with stored hash (if present)
+      const providedHash = await sha256Hex(password);
+
+      if (foundUser.password_hash) {
+        if (foundUser.password_hash !== providedHash) {
+          toast({
+            title: 'Login Failed',
+            description: 'Invalid email or password',
+            variant: 'destructive',
+          });
+          return false;
+        }
+      } else {
+        // Legacy user without password set (seeded admin). Require known admin password once, then persist hash.
+        const isAdminBootstrap =
+          normalizedEmail === 'admin@system.com' && password === 'Admin123!';
+
+        if (isAdminBootstrap) {
+          updateUser(foundUser.id, {
+            password_hash: providedHash,
+            updated_at: new Date().toISOString(),
+          });
+        } else {
+          toast({
+            title: 'Login Failed',
+            description: 'Account requires password update. Please use the correct admin password or re-register.',
+            variant: 'destructive',
+          });
+          return false;
+        }
+      }
+
       setUser(foundUser);
       setCurrentUser(foundUser);
-      
+
       toast({
         title: 'Login Successful',
         description: `Welcome back, ${foundUser.name}!`,
@@ -116,12 +143,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return false;
       }
 
-      // Create new user
+      // Create new user with password hash
+      const password_hash = await sha256Hex(userData.password);
+
       const newUser = addUser({
         name: userData.name.trim(),
         email: normalizedEmail,
         address: userData.address.trim(),
         role: 'user',
+        password_hash,
       });
 
       setUser(newUser);

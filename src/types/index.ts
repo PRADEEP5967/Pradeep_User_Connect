@@ -4,6 +4,7 @@ export interface User {
   email: string;
   address: string;
   role: 'admin' | 'user' | 'store_owner';
+  password_hash?: string;
   created_at: string;
   updated_at: string;
 }
