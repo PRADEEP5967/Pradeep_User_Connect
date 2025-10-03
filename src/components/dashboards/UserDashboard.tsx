@@ -257,45 +257,45 @@ export const UserDashboard: React.FC = () => {
     const isFavorite = favorites.has(store.id);
 
     return (
-      <Card key={store.id} className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
+      <Card key={store.id} className="group hover-lift transition-smooth border-2 hover:border-primary/50 animate-fade-in-up backdrop-blur-sm">
         <CardContent className="p-6">
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <div className="flex-1 space-y-2">
                 <div className="flex items-start justify-between">
-                  <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{store.name}</h3>
+                  <h3 className="text-xl font-bold font-display group-hover:text-primary transition-colors">{store.name}</h3>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="ml-2"
+                    className="ml-2 transition-smooth hover-scale"
                     onClick={() => toggleFavorite(store.id)}
                   >
-                    <Heart className={`w-5 h-5 transition-all ${isFavorite ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
+                    <Heart className={`w-5 h-5 transition-all ${isFavorite ? 'fill-red-500 text-red-500 animate-bounce-subtle' : 'text-muted-foreground'}`} />
                   </Button>
                 </div>
 
                 <div className="flex items-center gap-2 flex-wrap">
-                  <div className="flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full">
-                    <Star className="w-4 h-4 fill-primary text-primary" />
+                  <div className="flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full hover-glow transition-smooth">
+                    <Star className="w-4 h-4 fill-primary text-primary animate-pulse-slow" />
                     <span className="font-bold text-primary">{store.averageRating.toFixed(1)}</span>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-xs transition-smooth hover-scale">
                     <AnimatedCounter value={store.totalRatings} /> reviews
                   </Badge>
                   {userRating && (
-                    <Badge variant="default" className="text-xs">
+                    <Badge variant="default" className="text-xs animate-slide-in-right">
                       <Award className="w-3 h-3 mr-1" />
                       You rated {userRating.rating}★
                     </Badge>
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground transition-smooth hover:text-foreground">
                   <MapPin className="w-4 h-4" />
                   <span>{store.address}</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground transition-smooth hover:text-foreground">
                   <Mail className="w-4 h-4" />
                   <span>{store.email}</span>
                 </div>
@@ -311,7 +311,7 @@ export const UserDashboard: React.FC = () => {
               </div>
 
               {userRating && (
-                <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
+                <div className="p-3 bg-primary/5 rounded-lg border border-primary/20 animate-fade-in">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">Your Rating:</span>
@@ -347,7 +347,7 @@ export const UserDashboard: React.FC = () => {
                       placeholder="Share your experience with this store..."
                       value={ratingComments[store.id] || ''}
                       onChange={(e) => setRatingComments(prev => ({ ...prev, [store.id]: e.target.value }))}
-                      className="min-h-[80px]"
+                      className="min-h-[80px] transition-smooth focus:ring-2 focus:ring-primary"
                       maxLength={500}
                     />
                     <p className="text-xs text-muted-foreground">
@@ -359,7 +359,7 @@ export const UserDashboard: React.FC = () => {
                     <Button
                       onClick={() => handleRatingSubmit(store.id)}
                       disabled={!selectedRatings[store.id]}
-                      className="flex-1"
+                      className="flex-1 transition-smooth hover-glow"
                       size="sm"
                     >
                       <Star className="w-4 h-4 mr-2" />
@@ -369,6 +369,7 @@ export const UserDashboard: React.FC = () => {
                     <Button
                       variant="outline"
                       size="sm"
+                      className="transition-smooth hover-scale"
                       onClick={() => {
                         setDetailStore(store);
                         setShowDetailDialog(true);
@@ -382,6 +383,7 @@ export const UserDashboard: React.FC = () => {
                       <Button
                         variant="outline"
                         size="sm"
+                        className="transition-smooth hover-scale"
                         onClick={() => handleAddToCompare(store)}
                       >
                         <TrendingUp className="w-4 h-4" />
@@ -405,14 +407,16 @@ export const UserDashboard: React.FC = () => {
 
   return (
     <DashboardLayout title="User Dashboard" subtitle="Discover and rate amazing stores">
-      <div className="space-y-8">
-        <DashboardStats userRole="user" stats={userStats} />
+      <div className="space-y-8 animate-fade-in">
+        <div className="animate-scale-in">
+          <DashboardStats userRole="user" stats={userStats} />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 hover-lift transition-smooth animate-slide-in-left">
             <CardHeader className="bg-gradient-to-r from-primary/10 to-transparent">
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-primary" />
+              <CardTitle className="flex items-center gap-2 font-display">
+                <Zap className="w-5 h-5 text-primary animate-pulse-slow" />
                 Quick Actions
               </CardTitle>
               <CardDescription>Common tasks and shortcuts</CardDescription>
@@ -421,7 +425,7 @@ export const UserDashboard: React.FC = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Button
                   variant="outline"
-                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10"
+                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10 transition-smooth hover-lift stagger-item"
                   onClick={() => setActiveTab('top-rated')}
                 >
                   <TrendingUp className="w-6 h-6 text-primary" />
@@ -429,7 +433,7 @@ export const UserDashboard: React.FC = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10"
+                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10 transition-smooth hover-lift stagger-item"
                   onClick={() => setActiveTab('recent')}
                 >
                   <Clock className="w-6 h-6 text-blue-500" />
@@ -437,7 +441,7 @@ export const UserDashboard: React.FC = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10"
+                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10 transition-smooth hover-lift stagger-item"
                   onClick={() => setActiveTab('favorites')}
                 >
                   <Heart className="w-6 h-6 text-red-500" />
@@ -445,7 +449,7 @@ export const UserDashboard: React.FC = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10"
+                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/10 transition-smooth hover-lift stagger-item"
                   onClick={() => setShowMap(!showMap)}
                 >
                   <MapPin className="w-6 h-6 text-green-500" />
@@ -455,39 +459,39 @@ export const UserDashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover-lift transition-smooth animate-slide-in-right">
             <CardHeader className="bg-gradient-to-r from-blue-500/10 to-transparent">
-              <CardTitle className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-blue-500" />
+              <CardTitle className="flex items-center gap-2 font-display">
+                <Activity className="w-5 h-5 text-blue-500 animate-pulse-slow" />
                 Your Activity
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover-lift transition-smooth stagger-item">
                   <div className="flex items-center gap-2">
                     <Star className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium">Total Ratings</span>
                   </div>
-                  <Badge variant="secondary">
+                  <Badge variant="secondary" className="hover-scale transition-smooth">
                     <AnimatedCounter value={Object.keys(userRatings).length} />
                   </Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover-lift transition-smooth stagger-item">
                   <div className="flex items-center gap-2">
                     <Heart className="w-4 h-4 text-red-500" />
                     <span className="text-sm font-medium">Favorites</span>
                   </div>
-                  <Badge variant="secondary">
+                  <Badge variant="secondary" className="hover-scale transition-smooth">
                     <AnimatedCounter value={favorites.size} />
                   </Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover-lift transition-smooth stagger-item">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-green-500" />
                     <span className="text-sm font-medium">Comparing</span>
                   </div>
-                  <Badge variant="secondary">
+                  <Badge variant="secondary" className="hover-scale transition-smooth">
                     <AnimatedCounter value={compareStores.length} />
                   </Badge>
                 </div>

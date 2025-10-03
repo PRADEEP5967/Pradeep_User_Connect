@@ -57,19 +57,19 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-primary/5 p-4">
-      <Card className="w-full max-w-md shadow-strong">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-primary/5 p-4 animate-fade-in">
+      <Card className="w-full max-w-md shadow-strong hover-lift animate-scale-in">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
+          <CardTitle className="text-2xl font-bold font-display text-gradient animate-fade-in-down">
             Store Rating Platform
           </CardTitle>
-          <CardDescription className="text-base">
+          <CardDescription className="text-base animate-fade-in-up">
             Sign in to your account to continue
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-2 animate-slide-in-left">
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
@@ -78,17 +78,17 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={errors.email ? 'border-destructive' : ''}
+                className={`transition-smooth ${errors.email ? 'border-destructive' : ''}`}
                 maxLength={255}
                 autoComplete="email"
                 required
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
+                <p className="text-sm text-destructive animate-fade-in">{errors.email}</p>
               )}
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 animate-slide-in-right">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
@@ -98,7 +98,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={errors.password ? 'border-destructive pr-10' : 'pr-10'}
+                  className={`transition-smooth ${errors.password ? 'border-destructive pr-10' : 'pr-10'}`}
                   maxLength={16}
                   autoComplete="current-password"
                   required
@@ -107,24 +107,24 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent transition-smooth"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    <EyeOff className="h-4 w-4 text-muted-foreground transition-transform hover:scale-110" />
                   ) : (
-                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <Eye className="h-4 w-4 text-muted-foreground transition-transform hover:scale-110" />
                   )}
                 </Button>
               </div>
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
+                <p className="text-sm text-destructive animate-fade-in">{errors.password}</p>
               )}
             </div>
 
             <Button 
               type="submit" 
-              className="w-full gradient-primary hover:opacity-90 transition-opacity"
+              className="w-full gradient-primary hover:opacity-90 transition-smooth hover-glow animate-fade-in-up"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -141,12 +141,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center animate-fade-in-up">
             <p className="text-sm text-muted-foreground">
               Don't have an account?{' '}
               <Button
                 variant="link"
-                className="p-0 text-primary font-medium"
+                className="p-0 text-primary font-medium transition-smooth hover-brightness"
                 onClick={onSwitchToRegister}
               >
                 <UserPlus className="w-4 h-4 mr-1" />
@@ -155,7 +155,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
             </p>
           </div>
 
-          <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+          <div className="mt-4 p-4 bg-muted/50 rounded-lg animate-fade-in backdrop-blur-sm">
             <p className="text-xs text-muted-foreground font-medium mb-2">Demo Accounts:</p>
             <div className="space-y-1 text-xs text-muted-foreground">
               <p><strong>Admin:</strong> admin@system.com / Admin123!</p>
